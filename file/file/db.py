@@ -39,9 +39,10 @@ async def save_file(async_session: AsyncSession,
     new_file = FileUpload(name=file.filename, column=column, file=filename)
     async_session.add(new_file)
     await async_session.commit()
-    #print(new_file)
-    #FilePost(**new_file.dict())
-    return FilePost.model_validate(new_file)
+
+    res = {'name': file.filename, 'column': column, 'file': filename}
+
+    return res
 
 
 def generate_random_string():
