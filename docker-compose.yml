@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+
+#  web:
+#    build: .
+#    container_name: test_task
+#    command: ['./start.sh']
+#    volumes:
+#      - ./task_db.sqlite3:/test_task/task_db.sqlite3
+#    ports:
+#      - "8090:8090"
+
+#  app:
+#    build: .
+#    container_name: test_task
+#    command: ["./start.sh"]
+#    env_file:
+#      - .env
+#    stdin_open: true
+#    tty: true
+#    ports:
+#      - "8090:8090"
+
+
+  db:
+    image: postgres
+    container_name: "db_file"
+    volumes:
+      - pg_d:/var/lib/postgresql/data/
+    restart: always
+    env_file:
+      - .env
+    ports:
+    - "4112:5432"
+
+
+
+volumes:
+  pg_d:
