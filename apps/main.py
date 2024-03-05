@@ -7,18 +7,11 @@ from settings.settings import DATABASE_URI, APPS_MODELS
 app = FastAPI()
 
 
-# @app.on_event('startup')
-# def init_data():
-#     scheduler = BackgroundScheduler()
-#     scheduler.add_job(make_request_to_api_currency, 'cron', second='*/1', args=(get_async_session,))
-#     scheduler.start()
-
-
 app.include_router(routes)
 
 
 register_tortoise(
-    app,
+    app=app,
     db_url=DATABASE_URI,
     modules={"models": APPS_MODELS},
     generate_schemas=False,

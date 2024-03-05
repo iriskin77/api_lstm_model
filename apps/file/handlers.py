@@ -3,10 +3,10 @@ from . import services
 from .schema import FileUpdate, FileFilter
 
 
-router = APIRouter()
+router_file = APIRouter()
 
 
-@router.get("/")
+@router_file.get("/")
 async def get_file(id: int):
 
     try:
@@ -19,7 +19,7 @@ async def get_file(id: int):
         raise HTTPException(status_code=404, detail="File with this id was not found")
 
 
-@router.get("/files")
+@router_file.get("/files")
 async def get_files_list():
     try:
         files = await services.get_files_list()
@@ -28,7 +28,7 @@ async def get_files_list():
         raise HTTPException(status_code=500, detail=f'database error {ex}')
 
 
-@router.post("/")
+@router_file.post("/")
 async def upload_file(filename: str = Form(...),
                       column: str = Form(...),
                       file: UploadFile = File(...)):
@@ -41,7 +41,7 @@ async def upload_file(filename: str = Form(...),
         raise HTTPException(status_code=500, detail=f'database error {ex}')
 
 
-@router.patch("/")
+@router_file.patch("/")
 async def change_file(id: int, params: FileUpdate):
     file = await services.get_file_by_id(id=id)
 
@@ -58,7 +58,7 @@ async def change_file(id: int, params: FileUpdate):
     return file_updated
 
 
-@router.get("/filter/{params}")
+@router_file.get("/filter/{params}")
 async def get_filtered_files(params: FileFilter = Depends()):
     if params == {}:
         raise HTTPException(status_code=422,
