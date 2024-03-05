@@ -68,3 +68,17 @@ async def get_filtered_files(params: FileFilter = Depends()):
 
     res = await services.filter_files(params_to_filter=params_to_filter)
     return res
+
+
+@router_file.patch("/process_file")
+async def process_file(id: int):
+    file = await services.get_file_by_id(id=id)
+
+    if file is None:
+        raise HTTPException(status_code=404, detail="File with this id was not found")
+
+    try:
+        res = await services.process_file(id=id)
+        return res
+    except Exception as ex:
+        raise HTTPException(status_code=500, detail=f'database error {ex}')

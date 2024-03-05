@@ -2,9 +2,11 @@ import os
 import aiofiles
 import random
 import string
+from datetime import datetime
 from fastapi import HTTPException, UploadFile, File, Form
 from settings.settings import PATH_FILE_STORAGE
 from apps.file.models import FileToUpload
+from apps.file.lstm_model.lstm_model import process_file_data
 
 
 # ============ Insert a file into db ===========
@@ -71,4 +73,22 @@ async def filter_files(params_to_filter):
 
 
 async def delete_file_by_id(id: int):
-    pass
+    file = await get_file_by_id(id=id)
+    await file.delete()
+    return file.id
+
+
+async def process_file(id: int):
+
+    file = await get_file_by_id(id=id)
+    file_path = file.file
+    file_column = file.column
+    try:
+        process_file_data(file_path=file_path, name_column=file_column)
+        file.is_processed = True
+        file.processed_at = datetime.now()
+        await file.save()
+        return True
+    except Exception as ex:
+        print(ex)
+        return False

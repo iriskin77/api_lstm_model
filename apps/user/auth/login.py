@@ -9,7 +9,7 @@ from fastapi.security import OAuth2PasswordBearer
 from fastapi.security import OAuth2PasswordRequestForm
 from jose import jwt
 from jose import JWTError
-from settings.settings import ACCESS_TOKEN_EXPIRE_MINUTES, ALGORITHM, SECRET_KEY
+from settings import settings
 from .schema import Token
 from apps.user.users.models import User
 from .hash_pass import Hasher
@@ -25,6 +25,7 @@ async def _get_user_by_email_for_auth(email: str):
 
 async def authenticate_user(email: str, password: str) -> Union[User, None]:
     user = await _get_user_by_email_for_auth(email=email)
+    print(user)
     if user is None:
         return
     if not Hasher.verify_password(password, user.hashed_password):
@@ -39,7 +40,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Incorrect username or password",)
 
     # Если пользователь найден по почте, то создаем для него токен
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
 
     access_token = create_access_token(
         data={"sub": user.email, "other_custom_data": [1, 2, 3, 4]},
@@ -61,7 +62,7 @@ async def get_current_user_from_token(token: str = Depends(oauth2_scheme)):
 
     try:
         payload = jwt.decode(
-            token, SECRET_KEY, algorithms=[ALGORITHM]
+            token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
         email: str = payload.get("sub")
         print("username/email extracted is ", email)

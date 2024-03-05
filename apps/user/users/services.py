@@ -22,8 +22,27 @@ async def create_user(name: str, surname: str, email: str, hashed_password: str)
 
 
 async def get_user_by_email(email: str):
-    user = User.filter(email=email).exists()
+    user = await User.filter(email=email).exists()
+    print("get_user_by_email", user)
     if user:
-        user_by_email = User.filter(email=email).first()
+        user_by_email = await User.filter(email=email).first()
         return user_by_email
 
+
+async def get_user_by_id(id: int):
+    user = await User.filter(id=id).exists()
+    if user:
+        user_by_id = await User.filter(id=id).first()
+        return user_by_id
+
+
+async def update_user(id: int, params_to_update: dict):
+    user_to_update = await get_user_by_id(id=id)
+    await user_to_update.update_from_dict(params_to_update).save()
+    return user_to_update.id
+
+
+async def delete_user(id: int):
+    user_to_delete = await get_user_by_id(id=id)
+    await user_to_delete.delete()
+    return user_to_delete.id
