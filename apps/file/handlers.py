@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
 from . import services
-from .schema import FilePost, FileGet, FileUpdate, FileFilter
-from models.models import Test_Pydantic_Response
+from .schema import FileUpdate, FileFilter
 
 
 router = APIRouter()

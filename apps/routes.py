@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from file import handlers
+from apps.file import handlers
 
 routes = APIRouter()
 

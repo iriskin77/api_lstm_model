@@ -2,7 +2,7 @@ from fastapi import FastAPI
 import uvicorn
 from routes import routes
 from tortoise.contrib.fastapi import register_tortoise
-from core.settings import DATABASE_URI, APPS_MODELS
+from settings.settings import DATABASE_URI, APPS_MODELS
 
 app = FastAPI()
 

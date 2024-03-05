@@ -1,4 +1,4 @@
-from core.settings import DATABASE_URI, APPS_MODELS
+from settings.settings import DATABASE_URI, APPS_MODELS
 
 TORTOISE_ORM = {
     "connections": {"default": DATABASE_URI},

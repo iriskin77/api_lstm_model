@@ -3,10 +3,8 @@ import aiofiles
 import random
 import string
 from fastapi import HTTPException, UploadFile, File, Form
-from .schema import FilePost, FileGet
-from core.settings import PATH_FILE_STORAGE
-from datetime import datetime
-from models.models import FileToUpload
+from settings.settings import PATH_FILE_STORAGE
+from apps.file.models import FileToUpload
 
 
 # ============ Insert a file into db ===========
