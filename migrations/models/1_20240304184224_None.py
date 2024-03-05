@@ -3,7 +3,7 @@ from tortoise import BaseDBAsyncClient
 
 async def upgrade(db: BaseDBAsyncClient) -> str:
     return """
-        CREATE TABLE IF NOT EXISTS "file" (
+        CREATE TABLE IF NOT EXISTS "filetoupload" (
     "id" SERIAL NOT NULL PRIMARY KEY,
     "filename" VARCHAR(255) NOT NULL,
     "column" VARCHAR(255) NOT NULL,
