@@ -7,4 +7,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
+RUN chmod a+x ./celery_worker.sh
 RUN chmod a+x ./start.sh

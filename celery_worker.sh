@@ -1,8 +1,8 @@
 #!/bin/sh
 
-until cd /parser
+until cd /file
 do
     echo "Waiting for server volume..."
 done
 
-celery -A parser worker -l -info
+celery -A file worker -l -info

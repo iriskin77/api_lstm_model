@@ -1,6 +1,6 @@
 #!/bin/bash
 
-until alembic upgrade head
+until aerich migrate && aerich upgrade
 do
     echo "Waiting for db to be ready..."
     sleep 10
