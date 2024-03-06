@@ -1,8 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form
-from . import services
-from .schema import FileUpdate, FileFilter
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, BackgroundTasks
+from apps.file import services
+from apps.file.schema import FileUpdate, FileFilter
 from apps.user.users.models import User
 from apps.user.auth.login import get_current_user_from_token
+from fastapi.responses import JSONResponse
 
 
 router_file = APIRouter()
@@ -90,6 +91,7 @@ async def get_filtered_files(params: FileFilter = Depends()):
 
 @router_file.patch("/process_file")
 async def process_file(id: int,
+                       background_tasks: BackgroundTasks,
                        current_user: User = Depends(get_current_user_from_token)):
 
     file = await services.get_file_by_id(id=id)
@@ -98,7 +100,8 @@ async def process_file(id: int,
         raise HTTPException(status_code=404, detail="File with this id was not found")
 
     try:
-        res = await services.process_file(id=id)
-        return res
+        user_id = current_user.id
+        background_tasks.add_task(services.process_comments, id, user_id)
+        return JSONResponse({'success': 200})
     except Exception as ex:
         raise HTTPException(status_code=500, detail=f'database error {ex}')

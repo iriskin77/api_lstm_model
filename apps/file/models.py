@@ -11,6 +11,7 @@ class FileToUpload(models.Model):
     column = fields.CharField(max_length=255)
     file = fields.CharField(max_length=10000)
     is_processed = fields.BooleanField(null=True, default=False)
+    is_processing = fields.BooleanField(null=True, default=False)
     processed_at = fields.DatetimeField(null=True, default=None)
     created_at = fields.DatetimeField(auto_now_add=True)
     user = fields.ForeignKeyField(

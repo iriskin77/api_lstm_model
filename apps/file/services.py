@@ -3,13 +3,12 @@ import aiofiles
 import random
 import string
 from fastapi import HTTPException, UploadFile, File, Form
-from tortoise.expressions import Q
-
 from settings.settings import PATH_FILE_STORAGE
-from apps.file.models import FileToUpload
 from apps.user.users.models import User
-from apps.file.tasks import process_comments
-
+from datetime import datetime
+from tortoise.expressions import Q
+from apps.file.models import FileToUpload
+from apps.file.lstm_model.lstm_model import process_file_data
 
 # ============ Insert a file into db ===========
 
@@ -87,13 +86,19 @@ async def delete_file_by_id(id: int):
     return file.id
 
 
-async def process_file(id: int, user: User):
+async def process_comments(file_id, user_id):
+    file = await FileToUpload.filter(Q(id=file_id) & Q(user=user_id)).first()
+    file_path = file.file
+    file_column = file.column
+    file.is_processing = True
+    await file.save()
 
     try:
-        task = process_comments.delay(id, user)
-        #task = create_task.delay(int(task_type))
-        return task.id
-        #return True
+        process_file_data(file_path=file_path, name_column=file_column)
     except Exception as ex:
         print(ex)
-        return False
+    else:
+        file.is_processed = True
+        file.processed_at = datetime.now()
+        file.is_processing = False
+        await file.save()
