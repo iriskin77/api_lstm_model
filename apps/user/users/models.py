@@ -12,6 +12,7 @@ class User(models.Model):
     created_at = fields.DatetimeField(auto_now_add=True)
     updated_at = fields.DatetimeField(null=True, default=None)
     is_active = fields.BooleanField(null=True)
+
     #role = Column(Integer, ForeignKey("role.id"))
     #role_id = relationship("Role")
 

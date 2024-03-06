@@ -3,15 +3,19 @@ import aiofiles
 import random
 import string
 from fastapi import HTTPException, UploadFile, File, Form
+from tortoise.expressions import Q
+
 from settings.settings import PATH_FILE_STORAGE
 from apps.file.models import FileToUpload
+from apps.user.users.models import User
 from apps.file.tasks import process_comments
 
 
 # ============ Insert a file into db ===========
 
 
-async def save_file(filename: str = Form(...),
+async def save_file(user: User,
+                    filename: str = Form(...),
                     column: str = Form(...),
                     file: UploadFile = File(...)) -> int:
 
@@ -36,7 +40,8 @@ async def save_file(filename: str = Form(...),
 
     new_file = FileToUpload(filename=filename,
                             column=column,
-                            file=filename_path)
+                            file=filename_path,
+                            user=user)
     await new_file.save()
 
     return new_file.id
@@ -46,6 +51,11 @@ def generate_random_string():
     letters = string.ascii_letters
     rand_string = ''.join(random.choice(letters) for i in range(8))
     return rand_string
+
+
+async def get_file_by_id_for_user(id: int, user: User):
+    file = await FileToUpload.filter(Q(id=id) & Q(user=user.id)).first()
+    return file
 
 
 async def get_file_by_id(id: int):
@@ -60,8 +70,8 @@ async def get_files_list():
     return files
 
 
-async def change_file(id: int, params):
-    file = await FileToUpload.filter(id=id).first()
+async def change_file(id: int, params, user: User):
+    file = await FileToUpload.filter(Q(id=id) & Q(user=user.id)).first()
     await file.update_from_dict(params).save()
     return file.id
 
@@ -77,10 +87,10 @@ async def delete_file_by_id(id: int):
     return file.id
 
 
-async def process_file(id: int):
+async def process_file(id: int, user: User):
 
     try:
-        task = process_comments.delay(id)
+        task = process_comments.delay(id, user)
         #task = create_task.delay(int(task_type))
         return task.id
         #return True

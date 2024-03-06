@@ -1,4 +1,7 @@
 from datetime import datetime
+
+from tortoise.expressions import Q
+
 from apps.file.models import FileToUpload
 from apps.worker import celery
 from apps.file import services
@@ -6,8 +9,8 @@ from apps.file.lstm_model.lstm_model import process_file_data
 
 
 @celery.task(bind=True)
-async def process_comments(self, file_id):
-    file = await services.get_file_by_id(id=file_id)
+async def process_comments(self, file_id, user):
+    file = file = await FileToUpload.filter(Q(id=file_id) & Q(user=user.id)).first()
     file_path = file.file
     file_column = file.column
     try:

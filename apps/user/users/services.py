@@ -1,6 +1,8 @@
 from datetime import datetime
 from typing import Union
 
+from tortoise.expressions import Q
+
 from apps.user.users.models import User
 from fastapi import HTTPException
 
@@ -36,13 +38,19 @@ async def get_user_by_id(id: int):
         return user_by_id
 
 
-async def update_user(id: int, params_to_update: dict):
-    user_to_update = await get_user_by_id(id=id)
+async def get_auth_user_by_id(id: int, user: User):
+    #user = await User.filter(Q(id=id) & Q(user=user.id)).exists()
+    user_by_id = await User.filter(Q(id=id) & Q(user=user.id)).first()
+    return user_by_id
+
+
+async def update_user(id: int, params_to_update: dict, user: User):
+    user_to_update = await get_auth_user_by_id(id=id, user=user)
     await user_to_update.update_from_dict(params_to_update).save()
     return user_to_update.id
 
 
-async def delete_user(id: int):
-    user_to_delete = await get_user_by_id(id=id)
+async def delete_user(id: int, user: User):
+    user_to_delete = await get_auth_user_by_id(id=id, user=user)
     await user_to_delete.delete()
     return user_to_delete.id
