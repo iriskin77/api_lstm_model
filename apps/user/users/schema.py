@@ -31,6 +31,16 @@ class UserCreate(UserBase):
     #         return value
 
 
+class UserId(BaseModel):
+    id: int
+
+
+class UserGet(UserBase):
+    created_at: datetime
+    updated_at: datetime | None
+    is_active: bool | None
+
+
 class UserUpdate(UserBase):
     name: Optional[str]
     surname: Optional[str]

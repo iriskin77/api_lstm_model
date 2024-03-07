@@ -39,18 +39,20 @@ async def get_user_by_id(id: int):
 
 
 async def get_auth_user_by_id(id: int, user: User):
-    #user = await User.filter(Q(id=id) & Q(user=user.id)).exists()
-    user_by_id = await User.filter(Q(id=id) & Q(user=user.id)).first()
-    return user_by_id
+    _user = await get_user_by_id(id=id)
+    if _user.id == user.id:
+        return _user
 
 
 async def update_user(id: int, params_to_update: dict, user: User):
     user_to_update = await get_auth_user_by_id(id=id, user=user)
-    await user_to_update.update_from_dict(params_to_update).save()
-    return user_to_update.id
+    if user_to_update is not None:
+        await user_to_update.update_from_dict(params_to_update).save()
+        return user_to_update
 
 
 async def delete_user(id: int, user: User):
     user_to_delete = await get_auth_user_by_id(id=id, user=user)
-    await user_to_delete.delete()
-    return user_to_delete.id
+    if user_to_delete is not None:
+        await user_to_delete.delete()
+        return user_to_delete.id

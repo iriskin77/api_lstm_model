@@ -1,6 +1,5 @@
 from datetime import timedelta
 from typing import Union
-
 from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import HTTPException
@@ -76,8 +75,3 @@ async def get_current_user_from_token(token: str = Depends(oauth2_scheme)):
     if user is None:
         raise credentials_exception
     return user
-
-
-@router_login.get("/test_auth_endpoint")
-async def sample_endpoint_under_jwt(current_user: User = Depends(get_current_user_from_token)):
-    return {"Success": True, "current_user": current_user}
