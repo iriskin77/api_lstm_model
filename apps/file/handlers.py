@@ -1,15 +1,15 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, BackgroundTasks
 from apps.file import services
-from apps.file.schema import FileUpdate, FileFilter
+from apps.file.schema import FileUpdate, FileFilter, FilesGet, FileGet, FilePost
 from apps.user.users.models import User
 from apps.user.auth.login import get_current_user_from_token
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, FileResponse
 
 
 router_file = APIRouter()
 
 
-@router_file.get("/")
+@router_file.get("/", response_model=FileGet)
 async def get_file(id: int, current_user: User = Depends(get_current_user_from_token)):
 
     file = await services.get_file_by_id(id=id)
@@ -27,16 +27,16 @@ async def get_file(id: int, current_user: User = Depends(get_current_user_from_t
         raise HTTPException(status_code=404, detail="File with this id was not found")
 
 
-@router_file.get("/files")
-async def get_files_list():
+@router_file.get("/files", response_model=FilesGet)
+async def get_files_list(current_user: User = Depends(get_current_user_from_token)):
     try:
-        files = await services.get_files_list()
+        files = await services.get_files_list(user=current_user)
         return files
     except Exception as ex:
         raise HTTPException(status_code=500, detail=f'database error {ex}')
 
 
-@router_file.post("/")
+@router_file.post("/", response_model=FilePost)
 async def upload_file(filename: str = Form(...),
                       column: str = Form(...),
                       file: UploadFile = File(...),
@@ -103,5 +103,23 @@ async def process_file(id: int,
         user_id = current_user.id
         background_tasks.add_task(services.process_comments, id, user_id)
         return JSONResponse({'success': 200})
+    except Exception as ex:
+        raise HTTPException(status_code=500, detail=f'database error {ex}')
+
+
+@router_file.get("/download_file")
+async def download_file(id: int,
+                        current_user: User = Depends(get_current_user_from_token)):
+
+    content_type_xlsx = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+
+    file = await services.get_file_by_id(id=id)
+
+    if file is None:
+        raise HTTPException(status_code=404, detail="File with this id was not found")
+
+    try:
+        file = await services.download(id=id, user=current_user)
+        return FileResponse(file.file, media_type=content_type_xlsx, filename=file.filename)
     except Exception as ex:
         raise HTTPException(status_code=500, detail=f'database error {ex}')

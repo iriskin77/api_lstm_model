@@ -64,9 +64,9 @@ async def get_file_by_id(id: int):
         return file
 
 
-async def get_files_list():
-    files = await FileToUpload.all()
-    return files
+async def get_files_list(user=User):
+    files = await FileToUpload.filter(user=user.id).all()
+    return {'files': files}
 
 
 async def change_file(id: int, params, user: User):
@@ -102,3 +102,9 @@ async def process_comments(file_id, user_id):
         file.processed_at = datetime.now()
         file.is_processing = False
         await file.save()
+
+
+async def download(id: int, user: User):
+    file = await FileToUpload.filter(Q(id=id) & Q(user=user.id)).first()
+    return file
+
