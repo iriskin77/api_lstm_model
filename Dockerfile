@@ -12,4 +12,5 @@ COPY . .
 RUN aerich upgrade
 
 
-RUN uvicorn main:app --reload --host 0.0.0.0 --port 8090
+#RUN uvicorn main:app --reload --host 0.0.0.0 --port 8000
+CMD gunicorn main:app --workers 1 --worker-class uvicorn.workers.UvicornWorker --bind=0.0.0.0:8000
