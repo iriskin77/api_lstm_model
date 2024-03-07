@@ -1,5 +1,5 @@
 from pydantic import BaseModel, FilePath, ConfigDict
-from typing import Optional
+from typing import Optional, List
 from datetime import datetime
 
 
@@ -8,19 +8,18 @@ class FileGet(BaseModel):
     id: int
     filename: str
     column: str
-    file: str
     is_processed: bool | None = None
     processed_at: datetime | None = None
     created_at: datetime | None = None
 
 
+class FilesGet(BaseModel):
+    files: List[FileGet]
+
+
 class FilePost(BaseModel):
 
     id: int | None = None
-    name: str | None = None
-    column: str | None = None
-    file: str | None = None
-    time_get: datetime | None = None
 
     model_config = ConfigDict(from_attributes=False, populate_by_name=True)
 

@@ -72,12 +72,12 @@ async def get_files_list(user=User):
 async def change_file(id: int, params, user: User):
     file = await FileToUpload.filter(Q(id=id) & Q(user=user.id)).first()
     await file.update_from_dict(params).save()
-    return file.id
+    return file
 
 
 async def filter_files(params_to_filter):
     files = await FileToUpload.filter(**params_to_filter)
-    return files
+    return {'files': files}
 
 
 async def delete_file_by_id(id: int):

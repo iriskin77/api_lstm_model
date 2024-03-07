@@ -53,7 +53,7 @@ async def upload_file(filename: str = Form(...),
         raise HTTPException(status_code=500, detail=f'database error {ex}')
 
 
-@router_file.patch("/")
+@router_file.patch("/", response_model=FileGet)
 async def change_file(id: int,
                       params: FileUpdate,
                       current_user: User = Depends(get_current_user_from_token)):
@@ -74,7 +74,7 @@ async def change_file(id: int,
         raise HTTPException(status_code=500, detail=f'database error {ex}')
 
 
-@router_file.get("/filter/{params}")
+@router_file.get("/filter/", response_model=FilesGet)
 async def get_filtered_files(params: FileFilter = Depends()):
     if params == {}:
         raise HTTPException(status_code=422,
