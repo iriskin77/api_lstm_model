@@ -4,11 +4,11 @@ import random
 import string
 from fastapi import HTTPException, UploadFile, File, Form
 from settings.settings import PATH_FILE_STORAGE
-from apps.user.users.models import User
+from user.users.models import User
 from datetime import datetime
 from tortoise.expressions import Q
-from apps.file.models import FileToUpload
-from apps.file.lstm_model.lstm_model import process_file_data
+from file.models import FileToUpload
+from file.lstm_model.lstm_model import process_file_data
 
 # ============ Insert a file into db ===========
 

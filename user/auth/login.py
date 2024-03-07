@@ -10,10 +10,10 @@ from jose import jwt
 from jose import JWTError
 from settings import settings
 from .schema import Token
-from apps.user.users.models import User
+from user.users.models import User
 from .hash_pass import Hasher
 from .security import create_access_token
-from apps.user.users import services
+from user.users import services
 
 router_login = APIRouter()
 

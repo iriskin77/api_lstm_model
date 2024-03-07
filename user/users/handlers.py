@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from . import services
-from .schema import UserBase, UserCreate, UserUpdate, UserId, UserGet
-from apps.user.auth.hash_pass import Hasher
-from apps.user.auth.login import get_current_user_from_token
+from .schema import UserCreate, UserUpdate, UserId, UserGet
+from user.auth.hash_pass import Hasher
+from user.auth.login import get_current_user_from_token
 from .models import User
 
 

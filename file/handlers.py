@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, Form, BackgroundTasks
-from apps.file import services
-from apps.file.schema import FileUpdate, FileFilter, FilesGet, FileGet, FilePost
-from apps.user.users.models import User
-from apps.user.auth.login import get_current_user_from_token
+from . import services
+from .schema import FileUpdate, FileFilter, FilesGet, FileGet, FilePost
+from .models import User
+from user.auth.login import get_current_user_from_token
 from fastapi.responses import JSONResponse, FileResponse
 
 

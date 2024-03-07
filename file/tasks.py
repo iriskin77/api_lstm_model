@@ -1,7 +1,7 @@
 from datetime import datetime
 from tortoise.expressions import Q
-from apps.file.models import FileToUpload
-from apps.file.lstm_model.lstm_model import process_file_data
+from file.models import FileToUpload
+from file.lstm_model.lstm_model import process_file_data
 
 
 async def process_comments(file_id, user_id):

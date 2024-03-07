@@ -3,7 +3,7 @@ from typing import Union
 
 from tortoise.expressions import Q
 
-from apps.user.users.models import User
+from user.users.models import User
 from fastapi import HTTPException
 
 

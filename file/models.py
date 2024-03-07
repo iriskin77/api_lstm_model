@@ -1,7 +1,7 @@
 from tortoise import models
 from tortoise import fields
 from tortoise.contrib.pydantic import pydantic_model_creator
-from apps.user.users.models import User
+from user.users.models import User
 
 
 class FileToUpload(models.Model):

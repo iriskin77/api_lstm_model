@@ -1,8 +1,10 @@
 from fastapi import FastAPI
-import uvicorn
+import sys
 from routes import routes
 from tortoise.contrib.fastapi import register_tortoise
 from settings.settings import DATABASE_URI, APPS_MODELS
+
+sys.path.append('/main.py')
 
 app = FastAPI()
 
@@ -19,5 +21,7 @@ register_tortoise(
 )
 
 
-if __name__ == '__main__':
-    uvicorn.run(app=app, port=8000)
+# if __name__ == '__main__':
+#     uvicorn.run(app=app, port=8000)
+
+print(sys.path)
