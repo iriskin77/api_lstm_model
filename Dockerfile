@@ -11,6 +11,6 @@ COPY . .
 
 RUN aerich migrate && aerich upgrade
 
-WORKDIR file
+#WORKDIR file
 
-RUN uvicorn main:app --reload --host 0.0.0.0 --port 8090
+RUN cd apps && uvicorn main:app --reload --host 0.0.0.0 --port 8090
