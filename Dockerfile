@@ -1,5 +1,7 @@
 FROM python:3.10-slim
 
+RUN mkdir /file
+
 WORKDIR /file
 
 COPY requirements.txt .
@@ -7,5 +9,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN chmod a+x ./celery_worker.sh
-RUN chmod a+x ./start.sh
+RUN aerich migrate && aerich upgrade
+
+WORKDIR file
+
+RUN uvicorn main:app --reload --host 0.0.0.0 --port 8090
