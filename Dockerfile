@@ -9,7 +9,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN aerich migrate && aerich upgrade
+RUN aerich upgrade
 
 #WORKDIR file
 
