@@ -11,6 +11,7 @@ router_file = APIRouter()
 
 @router_file.get("/", response_model=FileGet)
 async def get_file(id: int, current_user: User = Depends(get_current_user_from_token)):
+    """get_file принимает id файла, возвращает файл, принадлежайщий пользователю. Только для авторизованных пользователей"""
 
     file = await services.get_file_by_id(id=id)
 
@@ -29,6 +30,7 @@ async def get_file(id: int, current_user: User = Depends(get_current_user_from_t
 
 @router_file.get("/files", response_model=FilesGet)
 async def get_files_list(current_user: User = Depends(get_current_user_from_token)):
+    """Возвращает набор файлов, которые принадлежат пользователю. Только для авторизованных пользователей"""
     try:
         files = await services.get_files_list(user=current_user)
         return files
@@ -41,6 +43,7 @@ async def upload_file(filename: str = Form(...),
                       column: str = Form(...),
                       file: UploadFile = File(...),
                       current_user: User = Depends(get_current_user_from_token)):
+    """Позволяет загружать файл на сервер. Только для авторизованных пользователей"""
 
     try:
         file_id = await services.save_file(user=current_user,
@@ -57,6 +60,8 @@ async def upload_file(filename: str = Form(...),
 async def change_file(id: int,
                       params: FileUpdate,
                       current_user: User = Depends(get_current_user_from_token)):
+
+    """Позволяет менять данные о файле файл. Только для авторизованных пользователей"""
 
     file = await services.get_file_by_id(id=id)
 
@@ -80,6 +85,8 @@ async def get_filtered_files(params: FileFilter = Depends()):
         raise HTTPException(status_code=422,
                             detail="At least one parameter should be provided")
 
+    """Позволяет получить список файлов по заданным критериям"""
+
     try:
         params_to_filter = params.dict(exclude_none=True)
 
@@ -93,6 +100,8 @@ async def get_filtered_files(params: FileFilter = Depends()):
 async def process_file(id: int,
                        background_tasks: BackgroundTasks,
                        current_user: User = Depends(get_current_user_from_token)):
+
+    """Позволяет использовать ML модель и определять тональность текстов в файле. Только для авторизованных пользователей"""
 
     file = await services.get_file_by_id(id=id)
 
@@ -110,6 +119,8 @@ async def process_file(id: int,
 @router_file.get("/download_file")
 async def download_file(id: int,
                         current_user: User = Depends(get_current_user_from_token)):
+
+    """Позволяет скачивать файл. Только для авторизованных пользователей"""
 
     content_type_xlsx = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
 
