@@ -21,14 +21,14 @@
     Если этого не сделать, то программа не сможет обработать комментарии
 
 Рис. 1
-![](https://github.com/iriskin77/file/blob/master/images/file_excel.png)
+![](https://github.com/iriskin77/api_lstm_model/tree/master/images/file_excel.png)
 
 + После этого необходимо загрузить файл и точно указать название колонки, в которой
 находятся тексты. Предварительно нужно зарегистрироваться и авторизоваться, см. рис. 2
 
 Рис. 2
 
-![](https://github.com/iriskin77/file/blob/master/images/upload.png)
+![](https://github.com/iriskin77/api_lstm_model/tree/master/images/upload.png)
 
 После этого можно обработать файл (/process_file), указав его id
 
