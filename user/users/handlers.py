@@ -11,6 +11,9 @@ router_user = APIRouter()
 
 @router_user.post("/", response_model=UserId)
 async def user_create(item: UserCreate):
+
+    """Регистрация пользователя. Проверки корректности почты и пароля отключены для простоты тестирования"""
+
     try:
         new_user_id = await services.create_user(
             name=item.name,
@@ -28,6 +31,8 @@ async def user_create(item: UserCreate):
 @router_user.get("/", response_model=UserGet)
 async def get_user(id: int, current_user: User = Depends(get_current_user_from_token)):
 
+    """Получить информацию о пользователе по его id"""
+
     try:
         user = await services.get_user_by_id(id=id)
     except Exception as ex:
@@ -40,6 +45,8 @@ async def get_user(id: int, current_user: User = Depends(get_current_user_from_t
 
 @router_user.patch("/", response_model=UserGet)
 async def update_user(id: int, item: UserUpdate, current_user: User = Depends(get_current_user_from_token)):
+
+    """Обновить информацию о пользователе по его id"""
 
     params_to_update = item.dict(exclude_none=True)
     if params_to_update == {}:
@@ -63,6 +70,8 @@ async def update_user(id: int, item: UserUpdate, current_user: User = Depends(ge
 
 @router_user.delete("/", response_model=UserId)
 async def user_delete(id: int, current_user: User = Depends(get_current_user_from_token)):
+
+    """Удалить пользователя по его id"""
 
     user = await services.get_user_by_id(id=id)
     if user is None:
