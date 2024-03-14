@@ -32,7 +32,7 @@ async def get_files_list(current_user: User = Depends(get_current_user_from_toke
     """Возвращает набор файлов, которые принадлежат пользователю. Только для авторизованных пользователей"""
     try:
         files = await services.get_files_list(user=current_user)
-        return files
+        return {'files': files}
     except Exception as ex:
         raise HTTPException(status_code=500, detail=f'database error {ex}')
 
@@ -49,7 +49,7 @@ async def upload_file(filename: str = Form(...),
                                            filename=filename,
                                            column=column,
                                            file=file)
-        return file_id
+        return {'id': file_id}
 
     except Exception as ex:
         raise HTTPException(status_code=500, detail=f'database error {ex}')

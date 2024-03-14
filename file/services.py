@@ -66,7 +66,7 @@ async def get_file_by_id(id: int):
 
 async def get_files_list(user=User):
     files = await FileToUpload.filter(user=user.id).all()
-    return {'files': files}
+    return files
 
 
 async def change_file(id: int, params, user: User):

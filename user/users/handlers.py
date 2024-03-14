@@ -43,7 +43,7 @@ async def get_user(id: int, current_user: User = Depends(get_current_user_from_t
         return user
 
 
-@router_user.patch("/", response_model=UserGet)
+@router_user.patch("/", response_model=UserId)
 async def update_user(id: int, item: UserUpdate, current_user: User = Depends(get_current_user_from_token)):
 
     """Обновить информацию о пользователе по его id"""
@@ -57,15 +57,15 @@ async def update_user(id: int, item: UserUpdate, current_user: User = Depends(ge
         raise HTTPException(status_code=404, detail=f"User with id {id} not found.")
 
     try:
-        updated_user = await services.update_user(id=id,
-                                                  params_to_update=params_to_update,
-                                                  user=current_user)
+        updated_user_id = await services.update_user(id=id,
+                                                     params_to_update=params_to_update,
+                                                     user=current_user)
 
-        if updated_user is not None:
-            return updated_user
-        raise HTTPException(status_code=403, detail=f"You have no permission to update other users")
+        if updated_user_id is None:
+            raise HTTPException(status_code=403, detail=f"You have no permission to update other users")
+        return {'id': updated_user_id}
     except Exception as ex:
-        HTTPException(status_code=503, detail=f"Database error: {ex}")
+        raise HTTPException(status_code=503, detail=f"Database error: {ex}")
 
 
 @router_user.delete("/", response_model=UserId)
@@ -79,8 +79,8 @@ async def user_delete(id: int, current_user: User = Depends(get_current_user_fro
 
     try:
         deleted_user_id = await services.delete_user(id=id, user=current_user)
-        if deleted_user_id is not None:
-            return {'id': deleted_user_id}
-        raise HTTPException(status_code=403, detail=f"You have no permission to update other users")
+        if deleted_user_id is None:
+            raise HTTPException(status_code=403, detail=f"You have no permission to update other users")
+        return {'id': deleted_user_id}
     except Exception as ex:
         raise HTTPException(status_code=503, detail=f"Database error: {ex}")
