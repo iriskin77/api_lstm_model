@@ -48,7 +48,7 @@ async def update_user(id: int, params_to_update: dict, user: User):
     user_to_update = await get_auth_user_by_id(id=id, user=user)
     if user_to_update is not None:
         await user_to_update.update_from_dict(params_to_update).save()
-        return user_to_update
+        return user_to_update.id
 
 
 async def delete_user(id: int, user: User):
