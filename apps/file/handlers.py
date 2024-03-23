@@ -22,10 +22,7 @@ async def get_file(id: int, current_user: User = Depends(get_current_user_from_t
         file = await services.get_file_by_id_for_user(id=id, user=current_user)
     except Exception as ex:
         raise HTTPException(status_code=500, detail=f'database error {ex}')
-    else:
-        if file is not None:
-            return file
-        raise HTTPException(status_code=404, detail="File with this id was not found")
+    return file
 
 
 @router_file.get("/files", response_model=FilesGet)
@@ -74,9 +71,9 @@ async def change_file(id: int,
     params_to_update = params.dict(exclude_none=True)
     try:
         file_updated = await services.change_file(id=id, params=params_to_update, user=current_user)
-        return file_updated
     except Exception as ex:
         raise HTTPException(status_code=500, detail=f'database error {ex}')
+    return file_updated
 
 
 @router_file.get("/filter/", response_model=FilesGet)
@@ -91,9 +88,9 @@ async def get_filtered_files(params: FileFilter = Depends()):
         params_to_filter = params.dict(exclude_none=True)
 
         files = await services.filter_files(params_to_filter=params_to_filter)
-        return files
     except Exception as ex:
         raise HTTPException(status_code=500, detail=f'database error {ex}')
+    return files
 
 
 @router_file.patch("/process_file")
@@ -111,9 +108,9 @@ async def process_file(id: int,
     try:
         user_id = current_user.id
         background_tasks.add_task(services.process_comments, id, user_id)
-        return JSONResponse({'success': 200})
     except Exception as ex:
         raise HTTPException(status_code=500, detail=f'database error {ex}')
+    return JSONResponse({'success': 200})
 
 
 @router_file.get("/download_file")
