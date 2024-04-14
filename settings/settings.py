@@ -6,14 +6,6 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
-
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-print(str(BASE_DIR) + "/apps/file/file_storage")
-load_dotenv(os.path.join(BASE_DIR, ".env"))
-#absolute_path = os.path.abspath('file/apps')
-
-#PATH_FILE_STORAGE = os.path.join(os.path.dirname(os.path.dirname(__file__)), "apps/file/file_storage")
 PATH_FILE_STORAGE = str(BASE_DIR) + "/apps/file/file_storage/"
 
 DATABASE_URI = f'postgres://{os.environ.get("POSTGRES_USER")}:' \
@@ -31,15 +23,3 @@ APPS_MODELS = [
 SECRET_KEY: str = "secret_key"
 ALGORITHM: str = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
-
-print(PATH_FILE_STORAGE)
-
-
-
-# abs_path = Path(__file__).resolve().parent.parent
-#
-# model = load_model(rf"{abs_path}/model/best_model_LSTM10000_2.h5")
-#
-# with open(rf'{abs_path}/model/tokenizer_json.json') as file:
-#     data = json.load(file)
-#     tokenizer = tokenizer_from_json(data)

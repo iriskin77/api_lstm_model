@@ -17,12 +17,9 @@ class Model:
     tokenizer_relative_path = "tokenizer_json.json"
 
     def get_path_model(self):
-        #abs_model_path = os.path.abspath(self.model_relative_path)
-        #str(self.base_dir) + "/apps/file/lstm_model/best_model_LSTM10000_2.h5"
         return str(self.base_dir) + "/lstm_model/best_model_LSTM10000_2.h5"
 
     def get_path_tokenizer(self):
-        #abs_tokenizer_path = os.path.abspath(self.tokenizer_relative_path)
         return str(self.base_dir) + "/lstm_model/tokenizer_json.json"
 
 
@@ -57,8 +54,6 @@ def process_file_data(file_path, name_column):
                 coefficient.append(score)
 
     data = pd.DataFrame()
-    #headers = list(data.columns.values)
-    #data.drop(headers, axis=1, inplace=True)
     data['Сообщение'] = commentaries
     data['Класс'] = marks
     data['Коэффициент'] = coefficient
