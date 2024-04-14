@@ -9,8 +9,11 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN aerich migrate && aerich upgrade
+# RUN aerich migrate && aerich upgrade
 
-WORKDIR file
+#WORKDIR file
 
-RUN uvicorn main:app --reload --host 0.0.0.0 --port 8090
+RUN chmod a+x /file/start.sh
+ENTRYPOINT ["./start.sh"]
+
+# RUN uvicorn main:app --reload --host 0.0.0.0 --port 8090
