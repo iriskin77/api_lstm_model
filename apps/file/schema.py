@@ -9,6 +9,7 @@ class FileGet(BaseModel):
     filename: str
     column: str
     is_processed: bool | None = None
+    is_processing: bool | None = None
     processed_at: datetime | None = None
     created_at: datetime | None = None
 

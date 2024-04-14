@@ -1,11 +1,7 @@
 from fastapi import APIRouter
-# import apps.file.handlers as file_handler
-# import apps.user.users.handlers as user_handler
-# import apps.user.auth.login as login_handler
-from .file.handlers import router_file
-from .user.users.handlers import router_user
-from .user.auth.login import router_login
-
+import apps.file.handlers as file_handler
+import apps.user.users.handlers as user_handler
+import apps.user.auth.login as login_handler
 
 routes = APIRouter()
 
