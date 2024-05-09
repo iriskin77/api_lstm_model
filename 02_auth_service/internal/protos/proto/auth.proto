@@ -4,3 +4,54 @@ package auth;
 
 
 option go_package = "github.com/iriskin77/auth_grpc";
+
+
+
+service Auth {
+    rpc Register (RegisterRequest) returns (RegisterResponse);
+    rpc Login (LoginRequest) returns (LoginResponse);
+    rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
+    rpc RefreshTokens (RefreshTokensRequest) returns (RefreshTokensResponse);
+}
+
+// rpc Register (RegisterRequest) returns (RegisterResponse);
+
+message RegisterRequest {
+    string email = 1; // Email of the user to register
+    string password = 2; // Password of the user to register
+}
+
+message RegisterResponse {
+    string user_uuid = 1; // User ID of the registered
+}
+
+// rpc Login (LoginRequest) returns (LoginResponse);
+
+message LoginRequest {
+    string email = 1; // Email of the user to login
+    string password = 2; // Passwrod of the user to login
+}
+
+message LoginResponse {
+    string access_token = 1; // Auth token of the logged in user
+    string refresh_token = 2; // Auth token of the logged in user
+}
+
+// rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
+message DeleteUserRequest {
+    string user_uuid = 1;
+}
+
+message DeleteUserResponse {
+    bool is_deleted = 1;
+}
+
+// rpc RefreshTokens (RefreshTokensRequest) returns (RefreshTokensResponse);
+message RefreshTokensRequest {
+    string refresh_token = 1;
+}
+
+message RefreshTokensResponse {
+    string access_token = 1; // Auth token of the logged in user
+    string refresh_token = 2; // Auth token of the logged in user
+}
