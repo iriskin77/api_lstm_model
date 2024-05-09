@@ -5,6 +5,6 @@ import apps.user.auth.login as login_handler
 
 routes = APIRouter()
 
-routes.include_router(router=router_file, prefix="/file")
-routes.include_router(router=router_user, prefix="/users")
-routes.include_router(router=router_login, prefix="/login")
+routes.include_router(router=file_handler, prefix="/file", tags=["file"])
+routes.include_router(router=user_handler, prefix="/users", tags=["user"])
+routes.include_router(router=login_handler, prefix="/login", tags=["login"])

@@ -1,17 +1,5 @@
 ## Переделать по-новому:
 
-Новая схема:
-
-![Рис. 2](/images/new_scema.png)
-
-1) Api-gateway на Go
-
-2) Auth-service на Go + Mongo
-
-3) File-service на Python, gRPC
-
-4) File-process-service на Python
-
 ## Оглавление
 
 + [1) Описание?](#title1)
