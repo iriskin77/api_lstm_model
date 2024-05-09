@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+
+  mongodb:
+    image: bitnami/mongodb:latest
+    hostname: mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - data:/bitnami/mongodb
+
+# mongodb://admin:password123@localhost:6000/fastapi?authSource=admin
+volumes:
+  data:

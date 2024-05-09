@@ -1,0 +1,10 @@
+env: "local"
+
+jwt_secret: $3cr3t
+
+access_tokenTTL: 120
+refresh_tokenTTL: 43200 #30 days
+
+grpc:
+  port: 44044
+  timeout: 5s
