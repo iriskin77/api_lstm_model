@@ -4,9 +4,14 @@ import (
 	"context"
 	"fmt"
 	"os"
+	"time"
 
+	"github.com/iriskin77/auth_grpc/app/internal/auth"
+	"github.com/iriskin77/auth_grpc/app/internal/config"
+	"github.com/iriskin77/auth_grpc/app/internal/server"
+	"github.com/iriskin77/auth_grpc/app/pkg/jwt_auth"
 	"github.com/iriskin77/auth_grpc/app/pkg/logger"
-	"github.com/iriskin77/auth_grpc/app/pkg/mongodb"
+	"github.com/iriskin77/auth_grpc/app/pkg/storage/mongodb"
 	"github.com/joho/godotenv"
 )
 
@@ -17,6 +22,10 @@ func main() {
 	logger.Init()
 	logger := logger.GetLogger()
 	logger.Println("logger initialized")
+
+	// initializing config
+
+	conf := config.LoadConfig("./app/config/config.yml")
 
 	// load .env variables
 
@@ -41,22 +50,31 @@ func main() {
 
 	db := mongodb.NewMongoDB(mongoClient, "users")
 
-	fmt.Println(db)
+	//fmt.Println(db)
 
 	// initializing Redis
 
-	// initializing Server
+	// initializing jwt
 
-}
+	tokenManager, err := jwt_auth.NewManager(conf.JWTSecret, time.Duration(conf.AccessTokenTTL)*time.Minute, time.Duration(conf.RefreshTokenTTL)*time.Minute)
+	if err != nil {
+		logger.Fatal(err)
+	}
 
-func RunServer() {
-
-	// initializing TokenManager
+	// fmt.Println(tokenManager)
 
 	// initializing Repo
 
+	repo := auth.NewRepository(db, &logger)
+
 	// initializing Service
 
-	// initializing Handler
+	// serv := auth.NewService(repo)
+
+	// initializing Server
+
+	application := server.NewApp(&logger, conf.GRPC.Port, repo, tokenManager)
+
+	application.MustRun()
 
 }

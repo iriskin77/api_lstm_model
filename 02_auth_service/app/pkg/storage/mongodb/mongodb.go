@@ -22,7 +22,7 @@ func NewClientMongo(ctx context.Context, host, port, username, password, authDB 
 
 	fmt.Println(mongoDBURL)
 	// "mongodb://localhost:27017/lms?ssl=false&authSource=admin"
-	clientOptions := options.Client().ApplyURI(mongoDBURL)
+	clientOptions := options.Client().ApplyURI("mongodb://localhost:27017/")
 
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
@@ -32,6 +32,8 @@ func NewClientMongo(ctx context.Context, host, port, username, password, authDB 
 	if err = client.Ping(ctx, nil); err != nil {
 		return nil, fmt.Errorf("failed to ping mongoDB due to error: %v", err)
 	}
+
+	fmt.Println(1111)
 
 	return client, nil
 
