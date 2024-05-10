@@ -8,29 +8,21 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func NewClient(ctx context.Context, host, port, username, password, database, authDB string) (db *mongo.Database, err error) {
+func NewClientMongo(ctx context.Context, host, port, username, password, authDB string) (mongoClient *mongo.Client, err error) {
 
 	var mongoDBURL string
-	var isAuth bool
+	//var isAuth bool
 
 	if username == "" && password == "" {
 		mongoDBURL = fmt.Sprintf("mongodb://%s:%s", host, port)
 	} else {
-		isAuth = true
+		//isAuth = true
 		mongoDBURL = fmt.Sprintf("mongodb://%s:%s@%s:%s", username, password, host, port)
 	}
 
+	fmt.Println(mongoDBURL)
+	// "mongodb://localhost:27017/lms?ssl=false&authSource=admin"
 	clientOptions := options.Client().ApplyURI(mongoDBURL)
-	if isAuth {
-		if authDB == "" {
-			authDB = database
-		}
-		clientOptions.SetAuth(options.Credential{
-			AuthSource: authDB,
-			Username:   username,
-			Password:   password,
-		})
-	}
 
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
@@ -41,5 +33,11 @@ func NewClient(ctx context.Context, host, port, username, password, database, au
 		return nil, fmt.Errorf("failed to ping mongoDB due to error: %v", err)
 	}
 
-	return client.Database(database), nil
+	return client, nil
+
+}
+
+// TODO: This func should be in repository package
+func NewMongoDB(mongoClient *mongo.Client, database string) *mongo.Database {
+	return mongoClient.Database(database)
 }
