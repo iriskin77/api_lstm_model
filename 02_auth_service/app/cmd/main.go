@@ -12,6 +12,7 @@ import (
 	"github.com/iriskin77/auth_grpc/app/pkg/jwt_auth"
 	"github.com/iriskin77/auth_grpc/app/pkg/logger"
 	"github.com/iriskin77/auth_grpc/app/pkg/storage/mongodb"
+	"github.com/iriskin77/auth_grpc/app/pkg/storage/redisdb"
 	"github.com/joho/godotenv"
 )
 
@@ -50,9 +51,23 @@ func main() {
 
 	db := mongodb.NewMongoDB(mongoClient, "users")
 
-	//fmt.Println(db)
-
 	// initializing Redis
+
+	redisConfig, err := redisdb.NewRedisConfig(
+		os.Getenv("REDIS_PORT"),
+		os.Getenv("REDIS_PASSWORD"),
+		os.Getenv("REDIS_DB"),
+	)
+	if err != nil {
+		logger.Fatal(err)
+	}
+
+	clientRedis, err := redisdb.NewRedisClient(redisConfig)
+	if err != nil {
+		logger.Fatal(err)
+	}
+
+	storeRedis := auth.NewRedisStore(clientRedis)
 
 	// initializing jwt
 
@@ -61,19 +76,13 @@ func main() {
 		logger.Fatal(err)
 	}
 
-	// fmt.Println(tokenManager)
-
 	// initializing Repo
 
 	repo := auth.NewRepository(db, &logger)
 
-	// initializing Service
-
-	// serv := auth.NewService(repo)
-
 	// initializing Server
 
-	application := server.NewApp(&logger, conf.GRPC.Port, repo, tokenManager)
+	application := server.NewApp(&logger, conf.GRPC.Port, repo, storeRedis, tokenManager)
 
 	application.MustRun()
 

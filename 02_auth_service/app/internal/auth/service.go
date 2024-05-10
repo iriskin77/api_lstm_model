@@ -14,17 +14,20 @@ type service struct {
 	// создаем структуру, которая принимает репозиторий для работы с БД
 	storage      Storage
 	tokenManager jwt_auth.TokenManager
+	redisdb      *RedisRepo
 	logger       *logger.Logger
 }
 
 func NewService(
 	repo *Repository,
 	tokenManager jwt_auth.TokenManager,
+	rd *RedisRepo,
 	log *logger.Logger) *service {
 
 	return &service{
 		storage:      repo,
 		tokenManager: tokenManager,
+		redisdb:      rd,
 		logger:       log,
 	}
 }
