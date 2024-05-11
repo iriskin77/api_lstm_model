@@ -19,6 +19,7 @@ service Auth {
 message RegisterRequest {
     string email = 1; // Email of the user to register
     string password = 2; // Password of the user to register
+    string repeated_password = 3;
 }
 
 message RegisterResponse {
