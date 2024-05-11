@@ -49,8 +49,6 @@ func main() {
 		fmt.Println(err.Error())
 	}
 
-	db := mongodb.NewMongoDB(mongoClient, "users")
-
 	// initializing Redis
 
 	redisConfig, err := redisdb.NewRedisConfig(
@@ -61,6 +59,8 @@ func main() {
 	if err != nil {
 		logger.Fatal(err)
 	}
+
+	fmt.Println(redisConfig)
 
 	clientRedis, err := redisdb.NewRedisClient(redisConfig)
 	if err != nil {
@@ -78,7 +78,9 @@ func main() {
 
 	// initializing Repo
 
-	repo := auth.NewRepository(db, &logger)
+	db := mongodb.NewMongoDB(mongoClient, "auth_service")
+
+	repo := auth.NewRepository(db, "users", &logger)
 
 	// initializing Server
 

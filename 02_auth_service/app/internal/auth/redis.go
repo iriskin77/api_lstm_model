@@ -31,6 +31,10 @@ func (r *RedisRepo) SetSession(ctx context.Context, RefreshToken string, sess Se
 		return err
 	}
 
+	timeExpireSession := time.Now().Local().Add(sess.ExpiresAt)
+
+	r.client.ExpireAt(ctx, RefreshToken, timeExpireSession)
+
 	return nil
 }
 

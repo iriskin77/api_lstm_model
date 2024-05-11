@@ -17,7 +17,7 @@ type App struct {
 }
 
 // create new grpc server
-func NewApp(log *logger.Logger, port int, db *auth.Repository, rdb *auth.RedisRepo, tokenManager jwt_auth.TokenManager) *App {
+func NewApp(log *logger.Logger, port int, db *auth.Repository, rdb *auth.RedisRepo, tokenManager *jwt_auth.Manager) *App {
 
 	gRPCServer := grpc.NewServer()
 

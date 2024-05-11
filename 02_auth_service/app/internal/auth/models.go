@@ -1,6 +1,12 @@
 package auth
 
-import "github.com/google/uuid"
+import (
+	"fmt"
+
+	"golang.org/x/crypto/bcrypt"
+)
+
+// User structs and methods
 
 type User struct {
 	UUID     string
@@ -8,28 +14,63 @@ type User struct {
 	Password string
 }
 
-type CreateUserDTO struct {
-	Email          string `json:"Email,omitempty"`
-	Password       string `json:"Password,omitempty"`
-	RepeatPassword string `json:"RepeatPassword,omitempty"`
+func (u *User) GeneratePasswordHash() error {
+	pwd, err := generatePasswordHash(u.Password)
+	if err != nil {
+		return err
+	}
+	u.Password = pwd
+	return nil
 }
 
-func NewUser(dto CreateUserDTO) User {
-	return User{
-		UUID:     uuid.New().String(),
+func generatePasswordHash(password string) (string, error) {
+	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.MinCost)
+	if err != nil {
+		return "", fmt.Errorf("failed to hash password due to error %w", err)
+	}
+	return string(hash), nil
+}
+
+// UserCreateDTO structs and methods
+
+type UserCreateDTO struct {
+	Email            string
+	Password         string
+	RepeatedPassword string
+}
+
+func NewUserCreateDTO(email, password, repeatedPassword string) (*UserCreateDTO, error) {
+	return &UserCreateDTO{
+		Email:            email,
+		Password:         password,
+		RepeatedPassword: repeatedPassword,
+	}, nil
+}
+
+func NewUser(dto *UserCreateDTO) (*User, error) {
+
+	return &User{
 		Email:    dto.Email,
 		Password: dto.Password,
-	}
+	}, nil
 }
 
-type LoginUserDTO struct {
+type UserLoginDTO struct {
 	Email    string
 	Password string
 }
 
-func LoginUser(dto LoginUserDTO) User {
-	return User{
-		Email:    dto.Email,
-		Password: dto.Password,
+func NewUserLoginDTO(email, password string) (*UserLoginDTO, error) {
+	return &UserLoginDTO{
+		Email:    email,
+		Password: password,
+	}, nil
+}
+
+func (dto *UserLoginDTO) CheckPassword(inputPassword string) error {
+	err := bcrypt.CompareHashAndPassword([]byte(inputPassword), []byte(dto.Password))
+	if err != nil {
+		return fmt.Errorf("password does not match")
 	}
+	return nil
 }
