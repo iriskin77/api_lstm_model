@@ -7,14 +7,16 @@ welcome to this branch: https://github.com/iriskin77/api_lstm_model/tree/copy/sa
 
 ## Todo
 
-Now I am goingo to refactor the project according to the schema below:
+New service that should have to be done:
 
-![Рис. 2](/images/new_scema.png)
+![Рис. 2](/images/services.png)
 
-1) Api-gateway на Go
+1) Api-gateway
 
-2) Auth-service на Go + Mongo
+2) Auth-service Go + Mongo + Redis
 
-3) File-service на Python, gRPC
+3) File-service Go + gRPC + Postgres (to store texts extracted from files) + Minio (to store files)
 
-4) File-process-service на Python
+4) Process-service Python + FastApi + Minio (service with LSTM model to implement emotion analusis)
+
+5) Analytics service Go (service should analyze, count statistics)
