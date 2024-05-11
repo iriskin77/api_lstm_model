@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package file;
+
+service File {
+    rpc CreateFile (stream CreateFileRequest) returns (CreateFileResponse);
+    rpc GetFile (GetFileRequest) returns (GetFileResponse);
+    // rpc GetFiles (GetListFilesRequest) returns (GetListFilesResponse);
+}
+
+// rpc CreateFile (stream CreateFileRequest) returns (CreateFileResponse);
+message CreateFileRequest {
+    string filename = 1;
+    bytes file = 2;
+    optional float updated_at = 3;
+    optional float created_at = 4;
+}
+
+message CreateFileResponse {
+    string file_uuid = 1;
+}
+
+// rpc GetFile (GetFileRequest) returns (GetFileResponse);
+message GetFileRequest {
+    string file_uuid = 1;
+}
+
+message GetFileResponse {
+    string filename = 1;
+}
